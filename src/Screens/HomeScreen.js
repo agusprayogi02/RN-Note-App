@@ -1,12 +1,5 @@
 import React, {Component} from 'react'
-import {
-  StyleSheet,
-  TouchableOpacity,
-  RefreshControl,
-  SafeAreaView,
-  Platform,
-  Dimensions,
-} from 'react-native'
+import {StyleSheet, TouchableOpacity, RefreshControl, Text, Dimensions, View} from 'react-native'
 import Styles from '../Components/GlobalStyles'
 import {Icon, Card, ListItem, Input, Button} from 'react-native-elements'
 import {createTable, db, hapus, insert, ubah} from '../Components/Database.js'
@@ -97,38 +90,36 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Text style={[Styles.header, styles.head]}>Catatanku</Text>
+        <ScrollView
+          style={{margin: 5}}
+          centerContent={true}
+          refreshControl={
+            <RefreshControl refreshing={this.state.refresh} onRefresh={() => this.onRefresh()} />
+          }>
+          {this.state.data &&
+            this.state.data.map((l, i) => (
+              <ListItem key={i} bottomDivider>
+                <ListItem.Content>
+                  <ListItem.Title style={{fontWeight: 'bold'}}>{l.judul}</ListItem.Title>
+                  <ListItem.Subtitle>{l.isi}</ListItem.Subtitle>
+                  <ListItem.Subtitle>{l.tanggal}</ListItem.Subtitle>
+                </ListItem.Content>
+                <TouchableOpacity
+                  style={[styles.btn, {backgroundColor: 'orange'}]}
+                  onPress={() => this._update(l)}>
+                  <Icon name="edit" style="font-awesome" color="white" size={24} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={() => this._delete(l.id)}>
+                  <Icon name="delete" style="font-awesome" color="white" size={24} />
+                </TouchableOpacity>
+              </ListItem>
+            ))}
+        </ScrollView>
         <TouchableOpacity style={Styles.floatButtom} onPress={() => this._plus()}>
           <Icon name="plus" type="font-awesome" color="red" />
         </TouchableOpacity>
-        <Card>
-          <Card.Title>CatatanKu</Card.Title>
-          <Card.Divider />
-          <ScrollView
-            centerContent={true}
-            refreshControl={
-              <RefreshControl refreshing={this.state.refresh} onRefresh={() => this.onRefresh()} />
-            }>
-            {this.state.data &&
-              this.state.data.map((l, i) => (
-                <ListItem key={i} bottomDivider>
-                  <ListItem.Content>
-                    <ListItem.Title style={{fontWeight: 'bold'}}>{l.judul}</ListItem.Title>
-                    <ListItem.Subtitle>{l.isi}</ListItem.Subtitle>
-                    <ListItem.Subtitle>{l.tanggal}</ListItem.Subtitle>
-                  </ListItem.Content>
-                  <TouchableOpacity
-                    style={[styles.btn, {backgroundColor: 'orange'}]}
-                    onPress={() => this._update(l)}>
-                    <Icon name="edit" style="font-awesome" color="white" size={24} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.btn} onPress={() => this._delete(l.id)}>
-                    <Icon name="delete" style="font-awesome" color="white" size={24} />
-                  </TouchableOpacity>
-                </ListItem>
-              ))}
-          </ScrollView>
-        </Card>
         <Dialog
           visible={this.state.visible}
           onTouchOutside={() => {
@@ -157,7 +148,7 @@ class HomeScreen extends Component {
             </Card>
           </DialogContent>
         </Dialog>
-      </SafeAreaView>
+      </View>
     )
   }
 }
@@ -167,6 +158,8 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
+    zIndex: 1,
   },
   btn: {
     backgroundColor: 'red',
@@ -176,5 +169,12 @@ const styles = StyleSheet.create({
     width: 35,
     borderRadius: 35,
     marginRight: -5,
+  },
+  head: {
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'white',
+    backgroundColor: 'gray',
   },
 })

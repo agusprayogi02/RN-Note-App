@@ -141,6 +141,7 @@ export default StyleSheet.create({
     height: 50,
     backgroundColor: '#eaeaea',
     borderRadius: 100,
+    zIndex: 100,
   },
   pinMap: {
     width: 35,
